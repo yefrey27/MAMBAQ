@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#04030A" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>MAMBAQ — Museo de Arte Moderno de Barranquilla</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Unbounded:wght@300;400;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- AMBIENT PARTICLES -->
+  <canvas id="particleCanvas" class="particle-canvas"></canvas>
+
+  <!-- SPLASH -->
+  <div id="splash" class="splash">
+    <div class="splash-bg"></div>
+    <div class="splash-scanlines"></div>
+    <div class="splash-content">
+      <div class="splash-eyebrow">Colección · 2026</div>
+      <div class="splash-logo">
+        <div class="logo-glitch" data-text="MAMBAQ">MAMBAQ</div>
+        <div class="logo-underline"></div>
+      </div>
+      <p class="splash-subtitle">Museo de Arte Moderno de Barranquilla</p>
+      <div class="splash-divider">
+        <span class="divider-line"></span>
+        <span class="divider-diamond"></span>
+        <span class="divider-line"></span>
+      </div>
+      <p class="splash-tagline">Arte Digital</p>
+      <div class="splash-progress">
+        <div class="splash-progress-fill"></div>
+      </div>
+      <p class="splash-status" id="splashStatus">Inicializando colección...</p>
+    </div>
+    <div class="splash-corner tl"></div>
+    <div class="splash-corner tr"></div>
+    <div class="splash-corner bl"></div>
+    <div class="splash-corner br"></div>
+  </div>
+
+  <!-- APP -->
+  <div id="app" class="app hidden">
+
+    <!-- TOP HEADER -->
+    <header class="top-header">
+      <div class="header-left">
+        <div class="header-logo">MAMBAQ</div>
+        <div class="header-sep">◈</div>
+        <div class="header-tagline">Museo de Arte Moderno de Barranquilla</div>
+      </div>
+      <div class="header-right">
+        <span class="header-badge">2026</span>
+      </div>
+    </header>
+
+    <!-- NAV BAR -->
+    <nav class="nav-bar" id="navBar">
+      <div class="nav-glow"></div>
+      <button class="nav-btn active" data-section="crear">
+        <div class="nav-icon">
+          <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+        </div>
+        <span>Crear</span>
+      </button>
+      <button class="nav-btn" data-section="museo">
+        <div class="nav-icon">
+          <svg viewBox="0 0 24 24"><path d="M22 13h-4v4h-2v-4h-4v-2h4V7h2v4h4v2zm-8.5-8.5c0 1.38-1.12 2.5-2.5 2.5S8.5 5.88 8.5 4.5 9.62 2 11 2s2.5 1.12 2.5 2.5zM5.99 8.99L2 19h9.5v-4h3v4H19l-2.15-6.01C15.98 12.36 14.6 11.5 13 11.5H9c-1.6 0-2.98.86-3.01 1.49z"/></svg>
+        </div>
+        <span>Museo</span>
+      </button>
+      <button class="nav-btn" data-section="sobre">
+        <div class="nav-icon">
+          <svg viewBox="0 0 24 24"><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+        </div>
+        <span>Sobre</span>
+      </button>
+    </nav>
+
+    <div class="sections-wrapper" id="sectionsWrapper">
+
+      <!-- SECCIÓN CREAR -->
+      <section class="section active" id="sectionCrear">
+        <div class="section-header">
+          <div class="section-eyebrow">Taller del Artista</div>
+          <h1 class="section-title">Nueva <em>Obra</em></h1>
+          <p class="section-subtitle">Transforma una fotografía en arte para la colección permanente</p>
+        </div>
+
+        <div class="stage" id="canvasContainer">
+          <canvas id="mainCanvas"></canvas>
+          <div class="stage-placeholder" id="canvasPlaceholder">
+            <div class="placeholder-frame">
+              <div class="placeholder-corner tl"></div>
+              <div class="placeholder-corner tr"></div>
+              <div class="placeholder-corner bl"></div>
+              <div class="placeholder-corner br"></div>
+              <div class="placeholder-inner">
+                <div class="placeholder-icon-wrap">
+                  <svg class="placeholder-icon" viewBox="0 0 48 48">
+                    <rect x="6" y="10" width="36" height="28" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                    <circle cx="17" cy="20" r="4" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                    <polyline points="6,34 16,24 22,30 30,20 42,34" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                  </svg>
+                </div>
+                <p class="placeholder-text">Cargar imagen para comenzar</p>
+                <p class="placeholder-sub">Cámara · Galería · Arrastrar</p>
+              </div>
+            </div>
+          </div>
+          <div class="stage-overlay hidden" id="processingOverlay">
+            <div class="processing-inner">
+              <div class="processing-ring"></div>
+              <p class="processing-text" id="processingText">Aplicando estilo artístico...</p>
+              <div class="processing-bar"><div class="processing-bar-fill" id="processingBarFill"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="upload-strip">
+          <button class="upload-btn" id="btnCamera">
+            <svg viewBox="0 0 24 24"><path d="M12 15.2C10.2 15.2 8.8 13.8 8.8 12S10.2 8.8 12 8.8 15.2 10.2 15.2 12 13.8 15.2 12 15.2zM9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9z"/></svg>
+            <span>Cámara</span>
+          </button>
+          <button class="upload-btn" id="btnUpload">
+            <svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+            <span>Galería</span>
+          </button>
+          <input type="file" id="fileInput" accept="image/*" hidden />
+        </div>
+
+        <div class="settings-panel" id="settingsPanel">
+          <div class="settings-title">
+            <span class="settings-title-icon">✦</span>
+            Efectos
+          </div>
+
+          <div class="effects-grid">
+
+            <label class="artistic-card selected" data-effect="original">
+              <input type="radio" name="artisticEffect" value="original" checked hidden />
+              <div class="artistic-preview ap-original">
+                <div class="ap-label">◎</div>
+              </div>
+              <div class="artistic-card-info">
+                <span class="artistic-card-name">Original</span>
+                <span class="artistic-card-desc">Sin modificaciones</span>
+              </div>
+            </label>
+
+            <label class="artistic-card" data-effect="pixel">
+              <input type="radio" name="artisticEffect" value="pixel" hidden />
+              <div class="artistic-preview ap-pixel">
+                <div class="ap-label">⊞</div>
+              </div>
+              <div class="artistic-card-info">
+                <span class="artistic-card-name">Pixel</span>
+                <span class="artistic-card-desc">Arte pixelado</span>
+              </div>
+            </label>
+
+            <label class="artistic-card" data-effect="bw">
+              <input type="radio" name="artisticEffect" value="bw" hidden />
+              <div class="artistic-preview ap-bw">
+                <div class="ap-label">◑</div>
+              </div>
+              <div class="artistic-card-info">
+                <span class="artistic-card-name">B&amp;N</span>
+                <span class="artistic-card-desc">Blanco y negro</span>
+              </div>
+            </label>
+
+            <label class="artistic-card" data-effect="paint">
+              <input type="radio" name="artisticEffect" value="paint" hidden />
+              <div class="artistic-preview ap-paint">
+                <div class="ap-label">✦</div>
+              </div>
+              <div class="artistic-card-info">
+                <span class="artistic-card-name">Óleo</span>
+                <span class="artistic-card-desc">Pintura al óleo</span>
+              </div>
+            </label>
+
+          </div>
+
+          <div class="action-strip">
+            <button class="btn-secondary" id="btnApply">
+              <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+              <span>Aplicar</span>
+            </button>
+            <button class="btn-primary" id="btnSave">
+              <svg viewBox="0 0 24 24"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+              <span>Publicar</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECCIÓN MUSEO -->
+      <section class="section" id="sectionMuseo">
+        <div class="section-header museo-header">
+          <div class="section-eyebrow">Galería</div>
+          <h1 class="section-title">El <em>Museo</em></h1>
+          <button class="refresh-btn" id="btnRefresh" title="Actualizar">
+            <svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+          </button>
+        </div>
+
+        <div class="carousel-section">
+          <div class="carousel-label">
+            <span class="carousel-badge">Nuevas Adquisiciones</span>
+          </div>
+          <div class="carousel-track-wrap">
+            <div class="carousel-track" id="carouselTrack"></div>
+            <button class="carousel-arrow left" id="carouselPrev">
+              <svg viewBox="0 0 24 24"><path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6z"/></svg>
+            </button>
+            <button class="carousel-arrow right" id="carouselNext">
+              <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+            </button>
+          </div>
+          <div class="carousel-dots" id="carouselDots"></div>
+        </div>
+
+        <div class="collection-section">
+          <div class="collection-header">
+            <div class="collection-title">Colección Completa</div>
+            <div class="collection-filters" id="museoFilters">
+              <button class="filter-chip active" data-filter="all">Todas las obras</button>
+              <button class="filter-chip" data-filter="recent">Recientes</button>
+            </div>
+          </div>
+          <div class="gallery-grid" id="galleryGrid">
+            <div class="gallery-loading" id="galleryLoading">
+              <div class="loading-ring"></div>
+              <p>Cargando colección...</p>
+            </div>
+          </div>
+          <div class="empty-state hidden" id="emptyState">
+            <div class="empty-frame"></div>
+            <p class="empty-title">El museo aguarda su primera obra.</p>
+            <p class="empty-sub">Sea el primero en contribuir a la colección.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECCIÓN SOBRE -->
+      <section class="section" id="sectionSobre">
+        <div class="section-header">
+          <div class="section-eyebrow">Información</div>
+          <h1 class="section-title">Sobre el <em>Museo</em></h1>
+        </div>
+        <div class="about-hero">
+          <div class="about-hero-text">
+            <blockquote class="about-quote">
+              "El arte es la mentira que nos permite comprender la verdad."
+              <cite>— Pablo Picasso</cite>
+            </blockquote>
+          </div>
+        </div>
+       <div class="about-grid">
+  <div class="about-card" style="--i:0">
+    <div class="about-card-num">01</div>
+    <h3>El Museo</h3>
+    <p>MAMBAQ es un museo digital interactivo desarrollado como iniciativa académica, donde el arte fotográfico se transforma en píxeles. Este proyecto integra creatividad y tecnología para ofrecer una experiencia visual innovadora.</p>
+  </div>
+
+  <div class="about-card" style="--i:1">
+            <div class="about-card-num">03</div>
+            <h3>Álvaro Cepeda Samudio</h3>
+            <p>Periodista y escritor barranquillero, figura del Grupo de Barranquilla y amigo de García Márquez. Su obra más conocida, "La Casa Grande", es un referente de la literatura latinoamericana del siglo XX.</p>
+    </div>
+
+  <div class="about-card" style="--i:2">
+    <div class="about-card-num">02</div>
+    <h3>Nosotros</h3>
+    <p>Somos estudiantes de Ingeniería de Sistemas de la Universidad Simón Bolívar, enfocados en el desarrollo de soluciones tecnológicas modernas que integran arte digital, procesamiento de imágenes y aplicaciones web interactivas.</p>
+  </div>
+
+  <div class="about-card" style="--i:3">
+    <div class="about-card-num">03</div>
+    <h3>Participantes</h3>
+    <p>Este proyecto fue desarrollado por Yefrey Navarro, Roberto De La Hoz y Carlos Ovalle, quienes trabajaron en conjunto para diseñar e implementar una plataforma funcional, creativa y escalable.</p>
+  </div>
+
+  <div class="about-card" style="--i:4|">
+    <div class="about-card-num">04</div>
+    <h3>Enfoque Tecnológico</h3>
+    <p>La aplicación está construida utilizando JavaScript, Canvas API y Supabase como base de datos en la nube, garantizando una experiencia dinámica, sincronizada en tiempo real y sin dependencia de almacenamiento local.</p>
+  </div>
+</div>
+        <div class="about-stats" id="infoStats">
+          <div class="stat-card">
+            <span class="stat-num" id="statObras">—</span>
+            <span class="stat-label">Obras en Colección</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num" id="statArtistas">—</span>
+            <span class="stat-label">Artistas Participantes</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num">∞</span>
+            <span class="stat-label">Posibilidades</span>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- MODAL OBRA -->
+  <div class="modal-overlay hidden" id="artworkModal">
+    <div class="artwork-modal">
+      <button class="modal-close" id="modalClose">
+        <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+      </button>
+
+      <!-- Contenedor de imagen con zoom -->
+      <div class="artwork-modal-img" id="modalImgContainer">
+        <img id="modalImage" src="" alt="" />
+        <div class="artwork-modal-scanlines"></div>
+        <!-- Controles de zoom -->
+        <div class="zoom-controls">
+          <button class="zoom-btn" id="zoomIn" title="Acercar">
+            <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14zM12 10h-2v2H9v-2H7V9h2V7h1v2h2v1z"/></svg>
+          </button>
+          <span class="zoom-level" id="zoomLevel">100%</span>
+          <button class="zoom-btn" id="zoomOut" title="Alejar">
+            <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14zM7 9h5v1H7z"/></svg>
+          </button>
+          <button class="zoom-btn zoom-reset" id="zoomReset" title="Restablecer">
+            <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="artwork-modal-info">
+        <div class="artwork-modal-label">OBRA</div>
+        <h2 id="modalTitle" class="artwork-modal-title">—</h2>
+        <div class="artwork-modal-meta">
+          <span id="modalAuthor" class="artwork-modal-author">—</span>
+          <span class="artwork-modal-sep">·</span>
+          <span id="modalDate" class="artwork-modal-date">—</span>
+        </div>
+        <div class="artwork-modal-tag">Arte Digital · MAMBAQ 2026</div>
+        <div class="modal-stats-row">
+          <button class="modal-like-btn" id="modalLikeBtn">
+            <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            <span id="modalLikeCount">0</span>
+          </button>
+          <div class="modal-views-badge">
+            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+            <span id="modalViewCount">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL GUARDAR -->
+  <div class="modal-overlay hidden" id="saveModal">
+    <div class="save-modal">
+      <button class="modal-close" id="saveModalClose">
+        <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+      </button>
+      <div class="save-modal-header">
+        <div class="save-modal-eyebrow">Registro de Obra</div>
+        <h2 class="save-modal-title">Ingresar a la Colección</h2>
+      </div>
+      <div class="save-preview-wrap">
+        <div class="save-preview-frame">
+          <canvas id="savePreviewCanvas"></canvas>
+          <div class="save-preview-corner tl"></div>
+          <div class="save-preview-corner tr"></div>
+          <div class="save-preview-corner bl"></div>
+          <div class="save-preview-corner br"></div>
+        </div>
+      </div>
+      <div class="save-form">
+        <div class="form-group">
+          <label for="obraName">Título de la Obra</label>
+          <input type="text" id="obraName" placeholder="Sin título" maxlength="60" autocomplete="off" />
+        </div>
+        <div class="form-group">
+          <label for="autorName">Nombre del Artista</label>
+          <input type="text" id="autorName" placeholder="Artista Anónimo" maxlength="40" autocomplete="off" />
+        </div>
+        <button class="btn-publish" id="btnConfirmSave">
+          <span class="btn-publish-text">Publicar en el Museo</span>
+          <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+  <script src="main.js"></script>
+</body>
+</html>
