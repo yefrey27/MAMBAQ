@@ -1,0 +1,1643 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MAMBAQ — Museo de Arte Moderno de Barranquilla</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Unbounded:wght@300;400;700;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:       #04030A;
+      --bg2:      #080710;
+      --bg3:      #0E0C1A;
+      --gold:     #C9A84C;
+      --gold-l:   #E8C97A;
+      --gold-d:   #7A5E28;
+      --ivory:    #F0EBE0;
+      --ivory-d:  #9E9A8E;
+      --ivory-m:  #4A4740;
+      --border:   rgba(201,168,76,.10);
+      --border2:  rgba(201,168,76,.26);
+      --surf:     rgba(201,168,76,.04);
+      --serif:    'Cormorant Garamond', Georgia, serif;
+      --display:  'Unbounded', sans-serif;
+      --mono:     'DM Mono', monospace;
+      --ease:     cubic-bezier(.16,1,.3,1);
+    }
+
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--ivory);font-family:var(--mono);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    a{text-decoration:none;color:inherit}
+    img{display:block;width:100%;object-fit:cover}
+
+    /* ══════════════════════════════
+       TOPBAR
+    ══════════════════════════════ */
+    .topbar{
+      position:fixed;top:0;left:0;right:0;z-index:200;
+      height:60px;display:flex;align-items:center;justify-content:space-between;
+      padding:0 40px;
+      background:rgba(4,3,10,.93);
+      backdrop-filter:blur(20px);
+      border-bottom:1px solid var(--border2);
+      transition:background .3s;
+    }
+
+    .tb-brand{display:flex;align-items:center;gap:12px}
+    .tb-emblem{
+      width:36px;height:36px;border:1.5px solid var(--gold-d);border-radius:2px;
+      display:flex;align-items:center;justify-content:center;background:var(--surf);
+    }
+    .tb-emblem svg{width:20px;height:20px;fill:var(--gold)}
+    .tb-names{display:flex;flex-direction:column;gap:2px}
+    .tb-logo{font-family:var(--display);font-size:13px;font-weight:700;letter-spacing:.14em;color:var(--gold-l)}
+    .tb-sub{font-size:8.5px;letter-spacing:.1em;color:var(--ivory-d)}
+
+    .tb-sep{width:1px;height:26px;background:var(--border2);margin:0 16px}
+
+    .tb-nav{display:flex;align-items:center;gap:2px}
+    .tb-nav a{
+      font-size:10.5px;letter-spacing:.07em;color:var(--ivory-d);
+      padding:6px 13px;border-radius:2px;transition:color .2s,background .2s;
+    }
+    .tb-nav a:hover,.tb-nav a.on{color:var(--gold-l);background:rgba(201,168,76,.07)}
+
+    .tb-cta{
+      font-family:var(--display);font-size:9px;font-weight:700;letter-spacing:.18em;
+      text-transform:uppercase;color:#000;
+      background:linear-gradient(135deg,var(--gold),var(--gold-l));
+      padding:9px 22px;border-radius:2px;
+      display:flex;align-items:center;gap:7px;
+      transition:box-shadow .2s,transform .2s;
+      box-shadow:0 0 20px rgba(201,168,76,.2);
+      white-space:nowrap;
+    }
+    .tb-cta:hover{transform:translateY(-1px);box-shadow:0 0 36px rgba(201,168,76,.45)}
+    .tb-cta svg{width:12px;height:12px;fill:#000}
+
+    /* ══════════════════════════════
+       HERO — gran imagen museo real
+    ══════════════════════════════ */
+    .hero{
+      position:relative;height:100vh;min-height:600px;
+      display:flex;align-items:flex-end;overflow:hidden;
+    }
+
+    #heroParticles{
+      position:absolute;inset:0;z-index:1;pointer-events:none;
+    }
+
+    /* ── CINEMATIC REVEAL ── */
+    .hero-img{
+      position:absolute;inset:0;overflow:hidden;
+    }
+    .hero-img-el {
+      position:absolute;inset:0;width:100%;height:100%;
+      object-fit:cover;object-position:center 42%;
+      transform:scale(1.12) translateZ(0);
+      opacity:0;
+      -webkit-backface-visibility:hidden;
+      backface-visibility:hidden;
+      will-change:transform,opacity,filter;
+      animation: heroCinema 3.8s cubic-bezier(.22,1,.36,1) .3s both;
+    }
+    @keyframes heroCinema {
+      0%   { transform:scale(1.18) translateZ(0); opacity:0; filter:brightness(.3) saturate(.4) blur(8px); }
+      20%  { filter:brightness(.5) saturate(.7) blur(0px); opacity:1; }
+      100% { transform:scale(1.0) translateZ(0); opacity:1; filter:brightness(.88) saturate(1.18) contrast(1.04) blur(0px); }
+    }
+
+    /* Black curtain wipe — reveals from center */
+    .hero-curtain-l, .hero-curtain-r {
+      position:absolute;top:0;bottom:0;z-index:4;
+      background:#04030A;
+      animation: curtainWipe 1.4s cubic-bezier(.76,0,.24,1) .1s both;
+    }
+    .hero-curtain-l { left:0; width:51%; transform-origin:left; }
+    .hero-curtain-r { right:0; width:51%; transform-origin:right; }
+    @keyframes curtainWipe {
+      0%   { transform:scaleX(1); }
+      100% { transform:scaleX(0); }
+    }
+
+    /* Gold scan line sweeps down once */
+    .hero-scanline {
+      position:absolute;left:0;right:0;height:2px;z-index:5;
+      background:linear-gradient(to right,transparent,rgba(201,168,76,.9) 30%,rgba(232,201,122,1) 50%,rgba(201,168,76,.9) 70%,transparent);
+      box-shadow: 0 0 18px 3px rgba(201,168,76,.5);
+      animation: scanSweep 1.1s cubic-bezier(.4,0,.6,1) .9s both;
+      pointer-events:none;
+    }
+    @keyframes scanSweep {
+      from { top:-2px; opacity:1; }
+      to   { top:100%; opacity:0; }
+    }
+
+    /* Vignette frame lines — top & sides */
+    .hero-frame-top {
+      position:absolute;top:0;left:0;right:0;height:3px;z-index:5;
+      background:linear-gradient(to right,transparent,var(--gold-d) 20%,var(--gold-d) 80%,transparent);
+      transform:scaleX(0);transform-origin:center;
+      animation:frameExpand .7s cubic-bezier(.16,1,.3,1) 1.5s both;
+    }
+    .hero-frame-bl,.hero-frame-br {
+      position:absolute;bottom:0;z-index:5;width:160px;height:2px;
+      background:linear-gradient(to right,var(--gold-d),transparent);
+      animation:frameCorner .6s cubic-bezier(.16,1,.3,1) 1.8s both;
+      opacity:0;
+    }
+    .hero-frame-bl { left:0; }
+    .hero-frame-br { right:0; background:linear-gradient(to left,var(--gold-d),transparent); }
+    @keyframes frameExpand { from{transform:scaleX(0);opacity:1} to{transform:scaleX(1);opacity:1} }
+    @keyframes frameCorner { from{opacity:0;transform:scaleX(0)} to{opacity:1;transform:scaleX(1)} }
+
+    .hero-rule{
+      position:absolute;bottom:0;left:0;right:0;height:1px;z-index:3;
+      background:linear-gradient(to right,transparent,rgba(201,168,76,.4) 40%,rgba(201,168,76,.4) 60%,transparent);
+      transform:scaleX(0);transform-origin:left;
+      animation:ruleSlide .9s var(--ease) 1.9s both;
+    }
+    @keyframes ruleSlide{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+    .hero-overlay{
+      position:absolute;inset:0;z-index:2;
+      background:linear-gradient(to top,
+        rgba(4,3,10,.97) 0%,
+        rgba(4,3,10,.65) 30%,
+        rgba(4,3,10,.18) 58%,
+        rgba(4,3,10,.0) 100%);
+      animation: overlayFade 2s ease .8s both;
+    }
+    /* side darkening */
+    .hero-overlay::after {
+      content:'';position:absolute;inset:0;
+      background: radial-gradient(ellipse 100% 100% at 50% 50%, transparent 40%, rgba(4,3,10,.55) 100%);
+    }
+    @keyframes overlayFade {
+      from { opacity:0; }
+      to   { opacity:1; }
+    }
+
+    /* Override hero-tag / hero-title / hero-full / hero-desc animations to start later */
+    .hero-tag   { animation-delay: 1.6s !important; }
+    .hero-title { animation-delay: 1.8s !important; }
+    .hero-full  { animation-delay: 2.0s !important; }
+    .hero-desc  { animation-delay: 2.2s !important; }
+    .hero-btns  { animation-delay: 2.4s !important; }
+
+    .hero-content{
+      position:relative;z-index:2;
+      width:100%;max-width:1100px;margin:0 auto;
+      padding:0 48px 72px;
+    }
+
+    .hero-tag{
+      display:inline-flex;align-items:center;gap:10px;
+      font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-d);
+      margin-bottom:22px;
+      animation:fadeUp .8s var(--ease) .1s both;
+    }
+    .hero-tag::before{content:'';width:32px;height:1px;background:var(--gold-d)}
+
+    .hero-title{
+      font-family:var(--display);
+      font-size:clamp(48px,7vw,88px);
+      font-weight:900;line-height:.92;letter-spacing:-.02em;
+      color:var(--ivory);margin-bottom:10px;
+      animation:fadeUp .8s var(--ease) .2s both;
+    }
+    .hero-title span{color:var(--gold-l);text-shadow:0 0 60px rgba(201,168,76,.3)}
+
+    .hero-full{
+      font-family:var(--serif);font-size:clamp(13px,2vw,18px);
+      font-weight:300;letter-spacing:.22em;color:var(--ivory-d);
+      text-transform:uppercase;margin-bottom:28px;
+      animation:fadeUp .8s var(--ease) .3s both;
+    }
+
+    .hero-desc{
+      font-family:var(--serif);font-size:clamp(16px,2vw,20px);
+      font-style:italic;font-weight:300;color:var(--ivory-d);
+      max-width:560px;line-height:1.7;margin-bottom:40px;
+      animation:fadeUp .8s var(--ease) .4s both;
+    }
+
+    .hero-btns{
+      display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+      animation:fadeUp .8s var(--ease) .5s both;
+    }
+
+    .btn-gold{
+      font-family:var(--display);font-size:9.5px;font-weight:700;
+      letter-spacing:.2em;text-transform:uppercase;color:#000;
+      background:linear-gradient(135deg,var(--gold),var(--gold-l));
+      padding:15px 34px;border-radius:2px;
+      display:inline-flex;align-items:center;gap:9px;
+      box-shadow:0 0 30px rgba(201,168,76,.28);
+      transition:transform .2s,box-shadow .2s;
+    }
+    .btn-gold:hover{transform:translateY(-2px);box-shadow:0 0 50px rgba(201,168,76,.5)}
+    .btn-gold svg{width:14px;height:14px;fill:#000}
+
+    .btn-ghost{
+      font-size:10px;letter-spacing:.14em;color:var(--gold);
+      border:1px solid var(--border2);padding:14px 28px;border-radius:2px;
+      transition:background .2s,border-color .2s;
+    }
+    .btn-ghost:hover{background:var(--surf);border-color:var(--gold-d)}
+
+    /* scroll arrow */
+    .scroll-hint{
+      position:absolute;bottom:28px;left:50%;transform:translateX(-50%);
+      display:flex;flex-direction:column;align-items:center;gap:6px;
+      font-size:8px;letter-spacing:.22em;color:var(--ivory-d);opacity:.45;
+      animation:bob 2.2s ease-in-out infinite;
+    }
+    .scroll-hint svg{width:16px;height:16px;fill:var(--gold-d)}
+    @keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(7px)}}
+
+    /* ══════════════════════════════
+       STRIP DE DATOS
+    ══════════════════════════════ */
+    .data-strip{
+      background:var(--bg2);
+      border-top:1px solid var(--border2);border-bottom:1px solid var(--border);
+      display:flex;overflow-x:auto;
+    }
+    .data-strip::-webkit-scrollbar{display:none}
+
+    .ds-item{
+      flex:1;min-width:160px;
+      text-align:center;padding:22px 16px;
+      position:relative;
+    }
+    .ds-item+.ds-item::before{
+      content:'';position:absolute;left:0;top:20%;bottom:20%;
+      width:1px;background:var(--border);
+    }
+    .ds-num{
+      font-family:var(--display);font-size:28px;font-weight:900;
+      color:var(--gold-l);letter-spacing:-.03em;display:block;line-height:1;margin-bottom:6px;
+    }
+    .ds-lbl{font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--ivory-d)}
+
+    /* ══════════════════════════════
+       SECCIÓN: Historia
+    ══════════════════════════════ */
+    .section{max-width:1100px;margin:0 auto;padding:96px 48px}
+
+    .sec-tag{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-d);margin-bottom:12px}
+    .sec-h{
+      font-family:var(--display);font-size:clamp(26px,4vw,42px);
+      font-weight:700;letter-spacing:-.02em;color:var(--ivory);margin-bottom:0;
+    }
+    .sec-h em{font-family:var(--serif);font-style:italic;font-weight:300;color:var(--gold-l)}
+
+    .rule{height:1px;background:linear-gradient(to right,var(--gold-d),transparent);margin:28px 0 48px}
+
+    /* Historia: split 60/40 */
+    .hist-grid{display:grid;grid-template-columns:1fr 420px;gap:64px;align-items:start}
+
+    .hist-body p{
+      font-family:var(--serif);font-size:18px;font-weight:300;
+      line-height:1.85;color:var(--ivory-d);margin-bottom:20px;
+    }
+    .hist-body strong{color:var(--gold-l);font-weight:600}
+
+    .hist-img-wrap{
+      position:sticky;top:80px;
+      border:1px solid var(--border2);border-radius:2px;overflow:hidden;
+    }
+    .hist-img-wrap img{height:380px;object-fit:cover;width:100%;filter:sepia(.15) brightness(.9)}
+    .hist-img-caption{
+      padding:14px 18px;background:var(--bg2);
+      border-top:1px solid var(--border);
+      font-size:9px;letter-spacing:.12em;color:var(--ivory-d);
+    }
+
+    /* Timeline */
+    .timeline{margin-top:72px}
+    .tl-title{
+      font-family:var(--display);font-size:13px;font-weight:700;
+      letter-spacing:.1em;color:var(--ivory);margin-bottom:32px;
+    }
+
+    .tl-items{display:flex;flex-direction:column;gap:0}
+    .tl-item{
+      display:grid;grid-template-columns:80px 1px 1fr;gap:0 24px;
+      padding-bottom:36px;
+    }
+    .tl-year{
+      font-family:var(--display);font-size:11px;font-weight:700;
+      letter-spacing:.08em;color:var(--gold);padding-top:3px;text-align:right;
+    }
+    .tl-line{
+      background:var(--border2);position:relative;
+    }
+    .tl-line::before{
+      content:'';position:absolute;top:4px;left:50%;transform:translateX(-50%);
+      width:8px;height:8px;border:1.5px solid var(--gold);border-radius:50%;
+      background:var(--bg);
+    }
+    .tl-text{padding-top:0}
+    .tl-text h4{
+      font-family:var(--serif);font-size:17px;font-weight:600;
+      color:var(--ivory);margin-bottom:6px;
+    }
+    .tl-text p{font-size:11px;line-height:1.8;color:var(--ivory-d)}
+
+    /* ══════════════════════════════
+       GALERÍA FOTOGRÁFICA
+    ══════════════════════════════ */
+    .gallery-section{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:96px 0}
+
+    .gallery-inner{max-width:1100px;margin:0 auto;padding:0 48px}
+
+    .gallery-grid{
+      margin-top:48px;
+      display:grid;
+      grid-template-columns:repeat(12,1fr);
+      grid-template-rows:240px 240px;
+      gap:6px;
+    }
+
+    .gp{border-radius:2px;overflow:hidden;position:relative;background:var(--bg3)}
+    .gp img{width:100%;height:100%;object-fit:cover;transition:transform .5s var(--ease),filter .4s}
+    .gp:hover img{transform:scale(1.05);filter:brightness(1.1)}
+
+    .gp-overlay{
+      position:absolute;inset:0;
+      background:linear-gradient(to top,rgba(4,3,10,.8) 0%,transparent 55%);
+      opacity:0;transition:opacity .3s;display:flex;align-items:flex-end;padding:14px;
+    }
+    .gp:hover .gp-overlay{opacity:1}
+    .gp-label{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-l)}
+
+    .gp1{grid-column:1/6;grid-row:1/2}
+    .gp2{grid-column:6/9;grid-row:1/2}
+    .gp3{grid-column:9/13;grid-row:1/2}
+    .gp4{grid-column:1/4;grid-row:2/3}
+    .gp5{grid-column:4/9;grid-row:2/3}
+    .gp6{grid-column:9/13;grid-row:2/3}
+
+    /* ══════════════════════════════
+       COLECCIÓN — ARTISTAS
+    ══════════════════════════════ */
+    .artists-grid{
+      margin-top:48px;
+      display:grid;grid-template-columns:repeat(3,1fr);gap:2px;
+    }
+
+    .artist-card{
+      position:relative;overflow:hidden;height:320px;background:var(--bg3);cursor:pointer;
+    }
+    .artist-card img{
+      width:100%;height:100%;object-fit:cover;
+      filter:grayscale(.4) brightness(.75);
+      transition:transform .6s var(--ease),filter .4s;
+    }
+    .artist-card:hover img{transform:scale(1.08);filter:grayscale(0) brightness(.85)}
+
+    .artist-info{
+      position:absolute;bottom:0;left:0;right:0;
+      background:linear-gradient(to top,rgba(4,3,10,.95) 0%,rgba(4,3,10,.6) 60%,transparent 100%);
+      padding:28px 24px 22px;
+      transform:translateY(0);transition:transform .35s var(--ease);
+    }
+    .artist-card:hover .artist-info{transform:translateY(0)}
+
+    .artist-period{font-size:8.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-d);margin-bottom:7px}
+    .artist-name{font-family:var(--serif);font-size:22px;font-weight:600;color:var(--ivory);margin-bottom:5px}
+    .artist-role{font-size:9.5px;letter-spacing:.1em;color:var(--ivory-d)}
+
+    /* ══════════════════════════════
+       CITA
+    ══════════════════════════════ */
+    .quote-wrap{
+      max-width:800px;margin:0 auto;padding:96px 48px;text-align:center;
+    }
+    .quote-deco{
+      display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:44px;
+    }
+    .q-line{flex:1;max-width:80px;height:1px;background:linear-gradient(to right,transparent,var(--gold-d))}
+    .q-line:last-child{background:linear-gradient(to left,transparent,var(--gold-d))}
+    .q-dot{width:5px;height:5px;background:var(--gold);transform:rotate(45deg)}
+
+    blockquote{
+      font-family:var(--serif);font-size:clamp(22px,4vw,38px);
+      font-style:italic;font-weight:300;color:var(--ivory);line-height:1.5;
+      margin-bottom:24px;position:relative;
+    }
+    blockquote::before{
+      content:'"';font-size:150px;color:rgba(201,168,76,.06);
+      position:absolute;top:-32px;left:-10px;line-height:1;pointer-events:none;
+    }
+    cite{font-size:9.5px;letter-spacing:.22em;color:var(--gold-d);font-style:normal}
+
+    /* ══════════════════════════════
+       INFO PRÁCTICA
+    ══════════════════════════════ */
+    .info-section{
+      background:var(--bg2);
+      border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+    }
+    .info-inner{max-width:1100px;margin:0 auto;padding:80px 48px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:48px}
+
+    .info-block h3{
+      font-family:var(--display);font-size:11px;font-weight:700;
+      letter-spacing:.14em;color:var(--gold-l);margin-bottom:18px;
+      padding-bottom:12px;border-bottom:1px solid var(--border2);
+    }
+    .info-block ul{list-style:none}
+    .info-block ul li{
+      display:flex;justify-content:space-between;align-items:baseline;
+      font-size:11px;line-height:1;padding:8px 0;
+      border-bottom:1px solid var(--border);color:var(--ivory-d);
+    }
+    .info-block ul li span{color:var(--ivory);font-size:10.5px}
+    .info-block p{font-size:12px;line-height:1.8;color:var(--ivory-d)}
+    .info-block address{font-style:normal;font-size:12px;line-height:1.8;color:var(--ivory-d)}
+
+    /* map placeholder */
+    .map-box{
+      margin-top:16px;border:1px solid var(--border2);border-radius:2px;overflow:hidden;height:140px;position:relative;background:var(--bg3);
+    }
+    .map-box iframe{width:100%;height:100%;border:none;filter:grayscale(1) invert(1) contrast(.9) brightness(.5) saturate(.6)}
+
+    /* ══════════════════════════════
+       CTA FINAL
+    ══════════════════════════════ */
+    .cta-final{
+      position:relative;overflow:hidden;
+      padding:120px 48px;text-align:center;
+    }
+    .cta-final-bg{
+      position:absolute;inset:0;
+      background:
+        radial-gradient(ellipse 60% 70% at 50% 50%, rgba(201,168,76,.07) 0%, transparent 65%),
+        var(--bg);
+    }
+    .cta-final-grid{
+      position:absolute;inset:0;
+      background-image:
+        linear-gradient(rgba(201,168,76,.03) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(201,168,76,.03) 1px,transparent 1px);
+      background-size:56px 56px;
+      mask-image:radial-gradient(ellipse 70% 70% at 50% 50%,black 0%,transparent 80%);
+    }
+    .cta-content{position:relative;z-index:2;max-width:680px;margin:0 auto}
+    .cta-content h2{
+      font-family:var(--display);font-size:clamp(28px,5vw,52px);
+      font-weight:900;letter-spacing:-.02em;color:var(--ivory);margin-bottom:16px;
+    }
+    .cta-content h2 em{font-family:var(--serif);font-style:italic;font-weight:300;color:var(--gold-l)}
+    .cta-content p{
+      font-family:var(--serif);font-size:18px;font-style:italic;
+      font-weight:300;color:var(--ivory-d);margin-bottom:40px;line-height:1.65;
+    }
+
+    /* ══════════════════════════════
+       FOOTER
+    ══════════════════════════════ */
+    footer{background:var(--bg2);border-top:1px solid var(--border);padding:36px 48px}
+    .footer-inner{
+      max-width:1100px;margin:0 auto;
+      display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;
+    }
+    .footer-logo{font-family:var(--display);font-size:20px;font-weight:900;color:var(--gold-l);letter-spacing:.06em}
+    .footer-info{font-size:9px;letter-spacing:.1em;color:var(--ivory-d);text-align:center;line-height:1.9}
+    .footer-tag{font-size:9px;letter-spacing:.12em;color:var(--gold-d)}
+
+    /* ══════════════════════════════
+       ANIMACIONES
+    ══════════════════════════════ */
+    @keyframes fadeUp{
+      from{opacity:0;transform:translateY(24px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+
+    .reveal{opacity:0;transform:translateY(28px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+
+    /* ══════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════ */
+    @media(max-width:900px){
+      .tb-nav,.tb-sep{display:none}
+      .topbar{padding:0 20px}
+      .section{padding:64px 20px}
+      .gallery-inner{padding-left:20px;padding-right:20px}
+      .hist-grid{grid-template-columns:1fr}
+      .hist-img-wrap{position:static}
+      .artists-grid{grid-template-columns:1fr 1fr}
+      .info-inner{grid-template-columns:1fr;gap:32px;padding:60px 20px}
+      .gallery-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto;gap:4px}
+      .gp1,.gp2,.gp3,.gp4,.gp5,.gp6{grid-column:auto;grid-row:auto}
+      .gp{height:auto;aspect-ratio:4/3}
+      .gp img{object-fit:cover;object-position:center center}
+      .data-strip{flex-wrap:wrap}
+      .ds-item{min-width:45%;flex:1 1 45%}
+      .hero-content{padding:0 20px 64px}
+      .cta-final{padding:80px 20px}
+      footer{padding:32px 20px}
+      .quote-wrap{padding:64px 24px}
+    }
+
+    @media(max-width:600px){
+      /* Topbar */
+      .topbar{padding:0 14px;height:54px}
+      .tb-sub{display:none}
+      .tb-logo{font-size:12px}
+      .tb-emblem{width:30px;height:30px}
+      .tb-cta{padding:7px 14px;font-size:8px;gap:5px}
+      .tb-cta svg{width:10px;height:10px}
+
+      /* Hero */
+      .hero{min-height:100svh}
+      .hero-content{padding:0 16px 56px}
+      .hero-title{font-size:clamp(32px,10vw,52px);line-height:.95}
+      .hero-full{font-size:11px;letter-spacing:.1em;margin-bottom:14px}
+      .hero-desc{font-size:15px;margin-bottom:24px;max-width:100%}
+      .hero-tag{font-size:8px;margin-bottom:12px}
+      .hero-btns{flex-direction:column;align-items:stretch;gap:10px}
+      .btn-gold{padding:13px 24px;font-size:9px;justify-content:center}
+      .btn-ghost{padding:12px 24px;font-size:9px;text-align:center;display:block}
+
+      /* Data strip */
+      .ds-item{min-width:50%;flex:1 1 50%;padding:16px 10px}
+      .ds-num{font-size:22px}
+
+      /* Sections */
+      .section{padding:48px 16px}
+      .sec-h{font-size:clamp(22px,7vw,32px)}
+      .rule{margin:18px 0 28px}
+
+      /* Historia */
+      .hist-body p{font-size:16px}
+      .hist-img-wrap img{height:auto;aspect-ratio:4/3;object-fit:cover;object-position:center top}
+
+      /* Timeline */
+      .tl-item{grid-template-columns:52px 1px 1fr;gap:0 14px;padding-bottom:24px}
+      .tl-year{font-size:9px}
+      .tl-text h4{font-size:15px}
+
+      /* Galería */
+      .gallery-section{padding:48px 0}
+      .gallery-inner{padding:0 16px}
+      .gallery-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto;gap:6px;margin-top:24px}
+      .gp{height:auto;aspect-ratio:4/3}
+      .gp img{width:100%;height:100%;object-fit:cover;object-position:center center}
+
+      /* Artistas */
+      .artists-grid{grid-template-columns:1fr}
+      .artist-card{height:auto;aspect-ratio:3/2}
+      .artist-card img{object-position:center top}
+      .artist-name{font-size:18px}
+
+      /* Cita */
+      .quote-wrap{padding:48px 16px}
+      blockquote{font-size:clamp(18px,5.5vw,26px)}
+
+      /* Info práctica */
+      .info-inner{padding:44px 16px;gap:24px}
+
+      /* CTA final */
+      .cta-final{padding:60px 16px}
+      .cta-content h2{font-size:clamp(24px,8vw,36px)}
+      .cta-content p{font-size:16px}
+
+      /* Footer */
+      footer{padding:28px 16px}
+      .footer-inner{flex-direction:column;align-items:center;text-align:center;gap:12px}
+      .footer-logo{font-size:16px}
+    }
+
+    @media(max-width:380px){
+      .hero-title{font-size:30px}
+      .tb-cta span{display:none}
+      .tb-cta{padding:7px 10px}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══ TOPBAR ══ -->
+  <header class="topbar">
+    <div class="tb-brand">
+      <div class="tb-emblem">
+        <svg viewBox="0 0 24 24"><path d="M12 3L2 8.5v7L12 21l10-5.5v-7L12 3zm0 2.31L20 9.5 12 13.69 4 9.5 12 5.31zM4 11.5l8 4.19 8-4.19v3L12 18.5 4 14.5v-3z"/></svg>
+      </div>
+      <div class="tb-names">
+        <span class="tb-logo">MAMBAQ</span>
+        <span class="tb-sub">Museo de Arte Moderno · Barranquilla</span>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center">
+      <div class="tb-sep"></div>
+      <nav class="tb-nav">
+        <a href="#historia" class="on">Historia</a>
+        <a href="#galeria">Galería</a>
+        <a href="#coleccion">Colección</a>
+        <a href="#visita">Visitar</a>
+      </nav>
+    </div>
+
+    <a href="adultos.html" class="tb-cta" onclick="openFaceScanner(event)">
+      <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+      Colección Digital
+    </a>
+  </header>
+
+
+  <!-- ══ HERO ══ -->
+  <section class="hero">
+    <canvas id="heroParticles"></canvas>
+
+    <!-- Cinematic curtain wipe -->
+    <div class="hero-curtain-l"></div>
+    <div class="hero-curtain-r"></div>
+
+    <!-- Gold scan line sweep -->
+    <div class="hero-scanline"></div>
+
+    <!-- Frame decorations -->
+    <div class="hero-frame-top"></div>
+    <div class="hero-frame-bl"></div>
+    <div class="hero-frame-br"></div>
+
+    <!-- Actual building photo — full resolution source -->
+    <div class="hero-img">
+      <img
+        class="hero-img-el"
+        src="https://imagenes.eltiempo.com/files/image_1200_535/uploads/2023/12/27/658c99cad2f99.jpeg"
+        alt="Vista aérea Museo de Arte Moderno de Barranquilla"
+        onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Fachada_MAMB_Barranquilla.jpg/1280px-Fachada_MAMB_Barranquilla.jpg'"
+        fetchpriority="high"
+        decoding="sync"
+      />
+    </div>
+
+    <div class="hero-overlay"></div>
+    <div class="hero-rule"></div>
+
+    <div class="hero-content">
+      <div class="hero-tag">Barranquilla, Colombia · Desde 1964</div>
+      <h1 class="hero-title">Museo de<br><span>Arte Moderno</span></h1>
+      <p class="hero-full">de Barranquilla — MAMB</p>
+      <p class="hero-desc">
+        Un referente cultural del Caribe colombiano donde el arte moderno y contemporáneo dialoga con la identidad de una ciudad vibrante e irreverente.
+      </p>
+      <div class="hero-btns">
+        <a href="#historia" class="btn-gold">
+          <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+          Conocer el Museo
+        </a>
+        <a href="adultos.html" class="btn-ghost" onclick="openFaceScanner(event)">Colección Digital →</a>
+      </div>
+    </div>
+
+    <div class="scroll-hint">
+      <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+      Explorar
+    </div>
+  </section>
+
+
+  <!-- ══ DATA STRIP ══ -->
+  <div class="data-strip">
+    <div class="ds-item">
+      <span class="ds-num" data-count="1964" data-suffix="">1964</span>
+      <span class="ds-lbl">Año de Fundación</span>
+    </div>
+    <div class="ds-item">
+      <span class="ds-num">+5K</span>
+      <span class="ds-lbl">Obras en Colección</span>
+    </div>
+    <div class="ds-item">
+      <span class="ds-num" data-count="60" data-suffix="+">60+</span>
+      <span class="ds-lbl">Años de Historia</span>
+    </div>
+    <div class="ds-item">
+      <span class="ds-num" data-count="3" data-suffix="">3</span>
+      <span class="ds-lbl">Sedes Históricas</span>
+    </div>
+    <div class="ds-item">
+      <span class="ds-num">∞</span>
+      <span class="ds-lbl">Arte sin Límites</span>
+    </div>
+  </div>
+
+
+  <!-- ══ HISTORIA ══ -->
+  <section id="historia" class="section">
+    <div class="sec-tag reveal">Historia del Museo</div>
+    <h2 class="sec-h reveal">Seis décadas de <em>arte</em> en el Caribe</h2>
+    <div class="rule reveal"></div>
+
+    <div class="hist-grid">
+      <div class="hist-body">
+        <p class="reveal">
+          El <strong>Museo de Arte Moderno de Barranquilla (MAMB)</strong> fue fundado en <strong>1964</strong> bajo el impulso de un grupo de artistas, intelectuales y mecenas barranquilleros que soñaban con un espacio dedicado al arte moderno en el Caribe colombiano. Desde su origen estuvo vinculado al espíritu inquieto y cosmopolita de la ciudad.
+        </p>
+        <p class="reveal">
+          En sus primeras décadas, el museo fue un puente entre la escena artística local y las corrientes internacionales. Figuras como <strong>Alejandro Obregón</strong>, <strong>Enrique Grau</strong> y <strong>Cecilia Porras</strong> expusieron sus obras aquí, convirtiendo al MAMB en un epicentro cultural de América Latina.
+        </p>
+        <p class="reveal">
+          El museo ha habitado varias sedes a lo largo de su historia, cada una reflejando el crecimiento de la institución. Su sede actual en el <strong>barrio El Prado</strong> es una edificación diseñada para albergar exposiciones permanentes, temporales y actividades de formación artística.
+        </p>
+        <p class="reveal">
+          Hoy el MAMB es reconocido como uno de los museos más importantes de Colombia, con una colección que supera las <strong>5.000 obras</strong> entre pinturas, esculturas, fotografías, grabados y piezas de arte contemporáneo. Su misión es preservar, investigar y difundir el arte moderno como patrimonio cultural de la nación.
+        </p>
+      </div>
+
+      <div class="reveal">
+        <div class="hist-img-wrap">
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Obregon_Colombia.jpg/800px-Obregon_Colombia.jpg"
+            alt="Alejandro Obregón — artista icónico del MAMB"
+            onerror="this.style.display='none'"
+          />
+          <div class="hist-img-caption">Alejandro Obregón · Pintor barranquillero · Figura central del MAMB</div>
+        </div>
+
+        <div class="timeline" style="margin-top:32px">
+          <p class="tl-title">Cronología</p>
+          <div class="tl-items">
+            <div class="tl-item reveal">
+              <div class="tl-year">1964</div>
+              <div class="tl-line"></div>
+              <div class="tl-text">
+                <h4>Fundación</h4>
+                <p>Un grupo de artistas e intelectuales barranquilleros crea el museo como primer espacio dedicado al arte moderno en el Caribe colombiano.</p>
+              </div>
+            </div>
+            <div class="tl-item reveal">
+              <div class="tl-year">1970s</div>
+              <div class="tl-line"></div>
+              <div class="tl-text">
+                <h4>Expansión de la Colección</h4>
+                <p>Obregón, Grau y otros maestros nacionales donan obras al museo. La colección crece y se consolida como patrimonio nacional.</p>
+              </div>
+            </div>
+            <div class="tl-item reveal">
+              <div class="tl-year">1990s</div>
+              <div class="tl-line"></div>
+              <div class="tl-text">
+                <h4>Nueva Sede</h4>
+                <p>El museo se traslada a su sede actual en El Prado, con mayor capacidad para exposiciones y programas educativos.</p>
+              </div>
+            </div>
+            <div class="tl-item reveal">
+              <div class="tl-year">2010s</div>
+              <div class="tl-line"></div>
+              <div class="tl-text">
+                <h4>Arte Contemporáneo</h4>
+                <p>El MAMB abre sus puertas al arte contemporáneo y digital, incorporando nuevas voces de artistas colombianos e internacionales.</p>
+              </div>
+            </div>
+            <div class="tl-item reveal">
+              <div class="tl-year">2026</div>
+              <div class="tl-line"></div>
+              <div class="tl-text">
+                <h4>MAMBAQ Digital</h4>
+                <p>Nace la plataforma digital interactiva que permite crear y compartir arte desde cualquier lugar del mundo.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══ GALERÍA FOTOGRÁFICA ══ -->
+  <div id="galeria" class="gallery-section">
+    <div class="gallery-inner">
+      <div class="sec-tag reveal">Galería Fotográfica</div>
+      <h2 class="sec-h reveal">El museo en <em>imágenes</em></h2>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           GALERÍA — Para cambiar imágenes: reemplaza el atributo src
+           de cada <img> con la URL de la obra que deseas mostrar.
+           El atributo alt describe la obra.
+      ═══════════════════════════════════════════════════════════ -->
+      <div class="gallery-grid reveal">
+
+  <div class="gp gp1">
+    <img
+      src="https://imgs.search.brave.com/1Ykrv3iFtQVpZE-Np-btnvPmrBttvZSRzao3leRd-qc/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pMC53/cC5jb20vbGl2ZS5z/dGF0aWNmbGlja3Iu/Y29tLzY1NTM1LzUy/NDg5NjkxNzAyXzA1/MjJlZjIxMmMuanBn/P3Jlc2l6ZT01MDAs/MjgxJnNzbD0x"
+      alt="Alejandro Obregón — Velorio"
+      onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Obregon_Colombia.jpg/800px-Obregon_Colombia.jpg';this.onerror=null"
+    />
+    <div class="gp-overlay"><span class="gp-label">Violencia · 1962</span></div>
+  </div>
+
+  <div class="gp gp2">
+    <img
+      src="https://imgs.search.brave.com/HX_SlwV_xJ_AH9vywXx4TZH5q7yp8SDEzT_-GrhlkFs/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jb250/ZW50My5jZG5wcmFk/by5uZXQvaW1hZ2Vu/ZXMvRG9jdW1lbnRv/cy9pbWdzZW0vNWEv/NWEzMC81YTMwNGM0/Mi0yZWVlLTQ5ZGEt/YjM0ZS0zNDY4Yjhj/YjdmYjAvODg3MTJi/MTMtZDY4OS00OTY2/LWJlZGEtNjBhYTAz/ZjEzZjJjXzgzMi5q/cGc"
+      alt="Enrique Grau — Retrato"
+      onerror="this.parentElement.style.background='#13101E';this.style.display='none'"
+    />
+    <div class="gp-overlay"><span class="gp-label">El niño de Vallegrande · 1967</span></div>
+  </div>
+
+  <div class="gp gp3">
+    <img
+      src="https://imgs.search.brave.com/WBLPUKyxO9kcA12gO2sAsSZODyhuYgsnp-13cXCe8Ds/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWFn/ZW5lcy5lbHRpZW1w/by5jb20vZmlsZXMv/aW1hZ2VfNjAwXzQ1/NS91cGxvYWRzLzIw/MjQvMDUvMjAvNjY0/YmYzZmNmM2JkMi5q/cGVn"
+      alt="Museo de Arte Moderno de Barranquilla"
+      onerror="this.parentElement.style.background='#13101E';this.style.display='none'"
+    />
+    <div class="gp-overlay"><span class="gp-label">Sede MAMB</span></div>
+  </div>
+
+  <div class="gp gp4">
+    <img
+      src="https://imgs.search.brave.com/nh7vDtP0-BC5wQKKo7aHqYK3Qrhhl_1t0pgjTs8f6uI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/YXJ0bmV0LmNvbS9X/ZWJTZXJ2aWNlcy9p/bWFnZXMvbGwxNTMy/OTY3bGxnNE43MzJD/ZkRyQ1d2YUhCT0FE/L2FsZWphbmRyby1v/YnJlZyVDMyVCM24t/YyVDMyVCM25kb3Iu/anBn"
+      alt="Alejandro Obregón — Retrato del maestro"
+      onerror="this.parentElement.style.background='#13101E';this.style.display='none'"
+    />
+    <div class="gp-overlay"><span class="gp-label">Cóndores · 1959</span></div>
+  </div>
+
+  <div class="gp gp5">
+    <img
+      src="https://imgs.search.brave.com/h1wWxvSlDX4qecysJ3Yus-diuzhff7v1TEB45Z9Lo1A/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWFn/ZS5zbGlkZXNoYXJl/Y2RuLmNvbS9jZWNp/bGlhcG9ycmFzLTEw/MTIxMTA5MzYxOC1w/aHBhcHAwMS84NS9j/ZWNpbGlhLXBvcnJh/cy01LTMyMC5qcGc_/Y2I9MTY2ODUyNTI1/MQ"
+      alt="Cecilia Porras — Colección MAMB"
+      onerror="this.parentElement.style.background='#13101E';this.style.display='none'"
+    />
+    <div class="gp-overlay"><span class="gp-label">Naturaleza muerta · 1950</span></div>
+  </div>
+
+  <div class="gp gp6">
+    <img
+      src="https://imgs.search.brave.com/dRdPcz58vLT-TwEKNix_r4PqilxWj4dnK6zd6vxDQ2Q/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9saXZl/LnN0YXRpY2ZsaWNr/ci5jb20vMjIyNC8y/MzI0Njg2MzM2XzMy/YjZmZjA2ODNfdy5q/cGc"
+      alt="Colección permanente MAMB"
+      onerror="this.parentElement.style.background='#13101E';this.style.display='none'"
+    />
+    <div class="gp-overlay"><span class="gp-label">Muchacha de Sotavento · 1963</span></div>
+  </div>
+
+</div>
+    </div>
+  </div>
+
+
+  <!-- ══ ARTISTAS ══ -->
+  <section id="coleccion" class="section">
+    <div class="sec-tag reveal">Colección Permanente</div>
+    <h2 class="sec-h reveal">Grandes <em>Maestros</em> del MAMB</h2>
+    <div class="rule reveal"></div>
+
+    <div class="artists-grid reveal">
+
+      <!-- ═══════════════════════════════════════════════════════════
+           ARTISTAS — Para agregar más: copia un bloque <div class="artist-card">
+           y cambia: src de img, artist-period, artist-name, artist-role.
+           Si no tienes foto, usa el bloque con iniciales (como Cecilia Porras).
+      ═══════════════════════════════════════════════════════════ -->
+
+      <div class="artist-card">
+        <img
+          src="https://imgs.search.brave.com/6fWeKyBeRFzbuR3Zfbi-oKwCAkVZx-dQTr97JPHE-k0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9ibG9n/Z2VyLmdvb2dsZXVz/ZXJjb250ZW50LmNv/bS9pbWcvYi9SMjl2/WjJ4bC9BVnZYc0Vn/enZMRTUzbTdqNlM3/dkZEZ2tPMjM3U0U4/VGY2dDgxeTFmbE5C/M3FVbldncGJTVTlr/UEpydzdJMDFuelh0/YWttWGFORURRVlkx/M3N4NTl5bkxsUEVG/bHkteEtKZERrbUQy/bnVGc3daZXYxTnBn/MHhDamtKdGEzd1hf/VjVJRU9MQV9GVjdM/Zzd6MDVXZmtKTGRN/VkJnU01USU9XbXFV/SnY2MjhYS3RhNU9q/N3EyN045LTlWSGpS/aEZ1MEgvczE2MDAt/cncvQWxlamFuZHJv/JTIwT2JyZWclQzMl/QjNuJTIwcGludG9y/JTIwY29sb21iaWFu/by5qcGc"
+          alt="Alejandro Obregón"
+          onerror="this.style.display='none'"
+        />
+        <div class="artist-info">
+          <div class="artist-period">1920 – 1992</div>
+          <div class="artist-name">Alejandro Obregón</div>
+          <div class="artist-role">Pintor · Figura central del arte colombiano moderno · Su obra captura el trópico con una fuerza expresionista única.</div>
+        </div>
+      </div>
+
+      <div class="artist-card" style="background:linear-gradient(160deg,#0E0C1A,#1A1628)">
+        <img
+          src="https://imgs.search.brave.com/u6LhLPpnBBy_kfAJrtBaNfIf5zy7AdN8xqQxY8QUGkg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9lbWJs/ZW1hdGljYXJ0Z2Fs/bGVyeS5jb20vd3At/Y29udGVudC91cGxv/YWRzLzIwMjYvMDEv/MjAyMy0wNi0yOVQx/OV8zM18yOS42ODda/ZW5yaXF1ZS1ncmF1/LUFONTMtMS0xMDI0/eDc5Ny5qcGc"
+          alt="Enrique Grau"
+          onerror="this.style.display='none'"
+        />
+        <div class="artist-info" style="background:linear-gradient(to top,rgba(4,3,10,.98) 0%,rgba(4,3,10,.7) 60%,transparent 100%)">
+          <div class="artist-period">1920 – 2004</div>
+          <div class="artist-name">Enrique Grau</div>
+          <div class="artist-role">Pintor y escultor · Maestro del color y la forma que retrató la sensualidad del Caribe con humor e ironía.</div>
+        </div>
+      </div>
+
+      <div class="artist-card" style="background:linear-gradient(160deg,#080710,#13101E)">
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">
+          <div style="text-align:center;padding:24px">
+            <div style="font-family:var(--serif);font-size:82px;font-style:italic;color:var(--gold-d);opacity:.35;line-height:1;letter-spacing:-.04em">CP</div>
+          </div>
+        </div>
+        <div class="artist-info" style="background:linear-gradient(to top,rgba(4,3,10,.98) 0%,rgba(4,3,10,.7) 60%,transparent 100%)">
+          <div class="artist-period">1922 – 1971</div>
+          <div class="artist-name">Cecilia Porras</div>
+          <div class="artist-role">Pintora y grabadora · Primera mujer en exponer individualmente en Colombia. Voz pionera del arte moderno caribeño.</div>
+        </div>
+      </div>
+
+      <!-- ARTISTA 4 — Agrega aquí tu próxima imagen/artista -->
+      <div class="artist-card" style="background:linear-gradient(160deg,#0A0818,#151228)">
+        <img
+          src="https://imgs.search.brave.com/mRykJYoVx9aDYzp8UVSBMNOHP-2wqMx4ilaLF7jf9DI/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/YXJ0ZWFsZGlhLmNv/bS92YXIvYXJ0ZWFs/ZGlhX2NvbS9zdG9y/YWdlL2ltYWdlcy9p/bnRlcm5hdGlvbmFs/L2NvbnRlbmlkb3Mv/YXJ0aXN0YXMvbm92/ZWRhZGVzL2xhX3Vy/Z2VuY2lhX2RlX3Jl/dmFsdWFyX2VsX2xl/Z2Fkb19kZV9uZWdy/ZXRfcGlvbmVyb19k/ZWxfYXJ0ZV9nZW9t/ZXRyaWNvX2Fic3Ry/YWN0b19jb2xvbWJp/YW5vL2VkZ2FyX25l/Z3JldF9jb2xvbWJp/YV8xOTIwLTIwMTIv/NTQ2MDcxLTEtZXNs/LUFSL0VkZ2FyX05l/Z3JldF9Db2xvbWJp/YV8xOTIwLTIwMTJf/ZnVsbC5qcGc"
+          alt="Edgar Negret"
+          onerror="this.style.display='none';this.parentElement.querySelector('.artist-initials').style.display='flex'"
+        />
+        <div class="artist-initials" style="display:none;position:absolute;inset:0;align-items:center;justify-content:center">
+          <div style="font-family:var(--serif);font-size:82px;font-style:italic;color:var(--gold-d);opacity:.35;line-height:1;letter-spacing:-.04em">EN</div>
+        </div>
+        <div class="artist-info" style="background:linear-gradient(to top,rgba(4,3,10,.98) 0%,rgba(4,3,10,.7) 60%,transparent 100%)">
+          <div class="artist-period">1920 – 2012</div>
+          <div class="artist-name">Edgar Negret</div>
+          <div class="artist-role">Escultor · Pionero de la escultura abstracta en Colombia. Sus estructuras metálicas dialogan con el espacio y la luz.</div>
+        </div>
+      </div>
+
+      <!-- ARTISTA 5 — Agrega aquí tu próxima imagen/artista -->
+      <div class="artist-card" style="background:linear-gradient(160deg,#080A14,#0E1020)">
+        <img
+          src="https://imgs.search.brave.com/MoH-X4y4JqUOEjQQQuD9DPpMWOU4g3QF9DJkWrcGmuw/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9yYWRp/b25hY2lvbmFsLXYz/LnMzLmFtYXpvbmF3/cy5jb20vczNmcy1w/dWJsaWMvc3R5bGVz/L3BvcnRhZGFzX3Jl/bGFjaW9uYV80XzMv/cHVibGljL25vZGUv/YXJ0aWNsZS9maWVs/ZF9pbWFnZS9kJUMz/JUE5Ym9yYSUyMGFy/YW5nby5qcGc_aD1h/NDYzNjBkNCZpdG9r/PVQ0VFB6dGxk"
+          alt="Débora Arango"
+          onerror="this.style.display='none';this.parentElement.querySelector('.artist-initials').style.display='flex'"
+        />
+        <div class="artist-initials" style="display:none;position:absolute;inset:0;align-items:center;justify-content:center">
+          <div style="font-family:var(--serif);font-size:82px;font-style:italic;color:var(--gold-d);opacity:.35;line-height:1;letter-spacing:-.04em">DA</div>
+        </div>
+        <div class="artist-info" style="background:linear-gradient(to top,rgba(4,3,10,.98) 0%,rgba(4,3,10,.7) 60%,transparent 100%)">
+          <div class="artist-period">1907 – 2005</div>
+          <div class="artist-name">Débora Arango</div>
+          <div class="artist-role">Pintora · Figura transgresora del arte colombiano. Sus obras denunciaron la violencia y la hipocresía social con valentía inigualable.</div>
+        </div>
+      </div>
+
+      <!-- ARTISTA 6 — Agrega aquí tu próxima imagen/artista -->
+      <div class="artist-card" style="background:linear-gradient(160deg,#0C0A18,#181525)">
+        <img
+          src="https://imgs.search.brave.com/jFJHhZ1VBi9am2UxQGg9Kt-O4CjfJKuzkxKThS8isFg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9hcnRl/ZG9zLmNvbS93cC1j/b250ZW50L3VwbG9h/ZHMvMjAyMi8wMy9P/bWFyX1JheW9fMi5q/cGc"
+          alt="Omar Rayo"
+          onerror="this.style.display='none';this.parentElement.querySelector('.artist-initials').style.display='flex'"
+        />
+        <div class="artist-initials" style="display:none;position:absolute;inset:0;align-items:center;justify-content:center">
+          <div style="font-family:var(--serif);font-size:82px;font-style:italic;color:var(--gold-d);opacity:.35;line-height:1;letter-spacing:-.04em">OR</div>
+        </div>
+        <div class="artist-info" style="background:linear-gradient(to top,rgba(4,3,10,.98) 0%,rgba(4,3,10,.7) 60%,transparent 100%)">
+          <div class="artist-period">1928 – 2010</div>
+          <div class="artist-name">Omar Rayo</div>
+          <div class="artist-role">Grabador y pintor · Maestro del op-art latinoamericano. Sus obras en blanco y negro crean ilusiones ópticas de profundidad y movimiento.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Descripción colección -->
+    <div style="margin-top:56px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px">
+      <div class="reveal" style="border:1px solid var(--border);padding:28px 24px;border-left:2px solid var(--gold-d)">
+        <div style="font-size:8.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-d);margin-bottom:10px">Pintura</div>
+        <div style="font-family:var(--display);font-size:22px;font-weight:900;color:var(--gold-l);margin-bottom:8px">+3.200</div>
+        <p style="font-size:11px;line-height:1.8;color:var(--ivory-d)">Obras de maestros nacionales e internacionales, desde el expresionismo hasta el arte abstracto contemporáneo.</p>
+      </div>
+      <div class="reveal" style="border:1px solid var(--border);padding:28px 24px;border-left:2px solid var(--gold-d)">
+        <div style="font-size:8.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-d);margin-bottom:10px">Escultura & Grabado</div>
+        <div style="font-family:var(--display);font-size:22px;font-weight:900;color:var(--gold-l);margin-bottom:8px">+1.400</div>
+        <p style="font-size:11px;line-height:1.8;color:var(--ivory-d)">Piezas tridimensionales y grabados que complementan la colección bidimensional con volumen y textura.</p>
+      </div>
+      <div class="reveal" style="border:1px solid var(--border);padding:28px 24px;border-left:2px solid var(--gold-d)">
+        <div style="font-size:8.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-d);margin-bottom:10px">Fotografía & Digital</div>
+        <div style="font-family:var(--display);font-size:22px;font-weight:900;color:var(--gold-l);margin-bottom:8px">+600</div>
+        <p style="font-size:11px;line-height:1.8;color:var(--ivory-d)">Arte fotográfico y digital, incluyendo la nueva colección MAMBAQ creada por la comunidad barranquillera.</p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══ CITA ══ -->
+  <div style="background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+    <div class="quote-wrap reveal">
+      <div class="quote-deco">
+        <span class="q-line"></span><span class="q-dot"></span><span class="q-line"></span>
+      </div>
+      <blockquote>
+        "Barranquilla tiene algo que ninguna otra ciudad de Colombia posee: una libertad para el arte que nace del mar, del río y del carnaval."
+      </blockquote>
+      <cite>— Alejandro Obregón, sobre su ciudad natal</cite>
+    </div>
+  </div>
+
+
+  <!-- ══ INFO PRÁCTICA ══ -->
+  <div id="visita" style="background:var(--bg2);border-bottom:1px solid var(--border)">
+    <div class="info-inner reveal">
+      <div class="info-block">
+        <h3>Horarios</h3>
+        <ul>
+          <li>Lunes – Viernes <span>9:00 – 17:00</span></li>
+          <li>Sábado <span>10:00 – 16:00</span></li>
+          <li>Domingo <span>11:00 – 15:00</span></li>
+          <li>Festivos <span>11:00 – 14:00</span></li>
+        </ul>
+      </div>
+      <div class="info-block">
+        <h3>Tarifas de Entrada</h3>
+        <ul>
+          <li>Adultos <span>$8.000 COP</span></li>
+          <li>Estudiantes <span>$4.000 COP</span></li>
+          <li>Niños menores de 12 <span>Gratis</span></li>
+          <li>Martes (Público general) <span>Gratis</span></li>
+        </ul>
+      </div>
+      <div class="info-block">
+        <h3>Ubicación</h3>
+        <address>
+          Calle 68 No. 53–45<br>
+          Barrio El Prado<br>
+          Barranquilla, Atlántico<br>
+          Colombia<br><br>
+          Tel: (605) 370 4282<br>
+          info@mamb.org.co
+        </address>
+        <div class="map-box">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3926.3!2d-74.8124!3d10.9878!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8ef42d4c35bfb9a1%3A0x0!2sMuseo+de+Arte+Moderno+de+Barranquilla!5e0!3m2!1ses!2sco!4v1"
+            allowfullscreen="" loading="lazy">
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══ CTA FINAL ══ -->
+  <div class="cta-final">
+    <div class="cta-final-bg"></div>
+    <div class="cta-final-grid"></div>
+    <div class="cta-content reveal">
+      <div class="quote-deco" style="margin-bottom:36px">
+        <span class="q-line"></span><span class="q-dot"></span><span class="q-line"></span>
+      </div>
+      <h2>Crea tu obra en la<br><em>Colección Digital</em></h2>
+      <p>Forma parte de la historia del MAMBAQ. Transforma una fotografía en arte y únete a la colección permanente digital del museo.</p>
+      <a href="adultos.html" class="btn-gold" style="display:inline-flex;margin:0 auto" onclick="openFaceScanner(event)">
+        <svg viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+        Entrar a la Colección Digital
+      </a>
+    </div>
+  </div>
+
+
+  <!-- ══ FOOTER ══ -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo">MAMBAQ</div>
+      <div class="footer-info">
+        Museo de Arte Moderno de Barranquilla · Fundado en 1964<br>
+        Calle 68 No. 53–45, El Prado · Barranquilla, Colombia
+      </div>
+      <div class="footer-tag">© 2026 · Arte sin Fronteras</div>
+    </div>
+  </footer>
+
+
+  <script>
+    // Reveal on scroll
+    const reveals = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver(entries => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 60);
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    reveals.forEach(el => io.observe(el));
+
+    // Topbar shadow on scroll
+    const tb = document.querySelector('.topbar');
+    window.addEventListener('scroll', () => {
+      tb.style.background = window.scrollY > 40
+        ? 'rgba(4,3,10,0.98)'
+        : 'rgba(4,3,10,0.93)';
+    });
+
+    // Nav active link
+    const navLinks = document.querySelectorAll('.tb-nav a');
+    const sections = ['historia','galeria','coleccion','visita'];
+    window.addEventListener('scroll', () => {
+      let cur = '';
+      sections.forEach(id => {
+        const el = document.getElementById(id);
+        if (el && window.scrollY >= el.offsetTop - 100) cur = id;
+      });
+      navLinks.forEach(a => {
+        a.classList.toggle('on', a.getAttribute('href') === '#' + cur);
+      });
+    });
+
+    // ── Animated counters (data-strip) ───────────────────────────
+    (function initCounters() {
+      const counters = document.querySelectorAll('.ds-num[data-count]');
+      const counterIO = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          counterIO.unobserve(entry.target);
+          const el = entry.target;
+          const target = parseInt(el.dataset.count);
+          const suffix = el.dataset.suffix || '';
+          const duration = 1400;
+          const start = performance.now();
+          const from = target > 100 ? target - 80 : 0;
+          function step(now) {
+            const p = Math.min((now - start) / duration, 1);
+            const ease = 1 - Math.pow(1 - p, 3);
+            el.textContent = Math.round(from + (target - from) * ease) + suffix;
+            if (p < 1) requestAnimationFrame(step);
+          }
+          requestAnimationFrame(step);
+        });
+      }, { threshold: 0.5 });
+      counters.forEach(el => counterIO.observe(el));
+    })();
+
+    // ── Hero Particle System ──────────────────────────────────────
+    (function initParticles() {
+      const canvas = document.getElementById('heroParticles');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let W, H, particles = [];
+
+      function resize() {
+        W = canvas.width  = canvas.offsetWidth  || window.innerWidth;
+        H = canvas.height = canvas.offsetHeight || window.innerHeight;
+      }
+      resize();
+      window.addEventListener('resize', () => { resize(); });
+
+      function rand(a, b) { return a + Math.random() * (b - a); }
+
+      function Particle() {
+        this.reset = function() {
+          this.x  = rand(0, W);
+          this.y  = rand(H * 0.1, H);
+          this.vx = rand(-.18, .18);
+          this.vy = rand(-.35, -.05);
+          this.r  = rand(0.6, 2.4);
+          this.a  = rand(0, 1);
+          this.da = rand(.003, .008) * (Math.random() < .5 ? 1 : -1);
+          this.gold = Math.random() < 0.55;
+        };
+        this.reset();
+      }
+
+      for (let i = 0; i < 55; i++) particles.push(new Particle());
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        particles.forEach(p => {
+          p.x  += p.vx;
+          p.y  += p.vy;
+          p.a  += p.da;
+          if (p.a <= 0 || p.a >= 1) p.da *= -1;
+          if (p.y < -10 || p.x < -10 || p.x > W + 10) p.reset();
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = p.gold
+            ? `rgba(201,168,76,${p.a * 0.55})`
+            : `rgba(240,235,224,${p.a * 0.2})`;
+          ctx.fill();
+        });
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+  </script>
+
+<!-- ══ FACE SCANNER MODAL ══ -->
+<div id="faceScanModal" style="
+  display:none;position:fixed;inset:0;z-index:9999;
+  background:rgba(4,3,10,.96);backdrop-filter:blur(18px);
+  flex-direction:column;align-items:center;justify-content:center;
+  gap:24px;padding:24px;
+">
+  <!-- Close -->
+  <button onclick="closeFaceScanner()" style="
+    position:absolute;top:20px;right:20px;
+    width:44px;height:44px;border:1px solid rgba(201,168,76,.25);
+    border-radius:2px;background:rgba(201,168,76,.06);
+    color:rgba(201,168,76,.7);font-size:18px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--mono);transition:all .2s;
+  " onmouseover="this.style.borderColor='rgba(201,168,76,.6)'" onmouseout="this.style.borderColor='rgba(201,168,76,.25)'">✕</button>
+
+  <!-- Eyebrow -->
+  <div style="text-align:center;animation:fadeUp .6s var(--ease) both;">
+    <div style="font-family:var(--mono);font-size:9px;letter-spacing:.3em;color:var(--gold-d);text-transform:uppercase;margin-bottom:10px;">
+      ◈ &nbsp; Acceso a la Colección Digital &nbsp; ◈
+    </div>
+    <div style="font-family:var(--display);font-size:clamp(22px,4vw,34px);font-weight:300;color:var(--ivory);line-height:1.2;">
+      Verificación de <em style="color:var(--gold-l);font-family:var(--serif);font-weight:300;font-style:italic;">Identidad</em>
+    </div>
+  </div>
+
+  <!-- Camera viewport -->
+  <div style="position:relative;animation:fadeUp .6s var(--ease) .15s both;">
+    <!-- Outer ring -->
+    <div id="scanRing" style="
+      width:min(280px,72vw);height:min(280px,72vw);
+      border-radius:50%;
+      border:1px solid rgba(201,168,76,.2);
+      box-shadow:0 0 0 6px rgba(201,168,76,.04), 0 0 0 12px rgba(201,168,76,.02), 0 0 60px rgba(201,168,76,.08);
+      position:relative;overflow:hidden;
+      background:#000;
+    ">
+      <video id="scanVideo" autoplay playsinline muted style="
+        width:100%;height:100%;object-fit:cover;
+        filter:brightness(.85) contrast(1.15) saturate(.8);
+      "></video>
+
+      <!-- Face outline overlay -->
+      <svg id="faceOutline" viewBox="0 0 200 200" style="
+        position:absolute;inset:0;width:100%;height:100%;
+        pointer-events:none;opacity:0;transition:opacity .4s;
+      ">
+        <ellipse cx="100" cy="95" rx="48" ry="60"
+          fill="none" stroke="#86EFAC" stroke-width="1.5"
+          stroke-dasharray="6 4" opacity=".8"/>
+        <circle cx="84" cy="82" r="3" fill="#86EFAC" opacity=".6"/>
+        <circle cx="116" cy="82" r="3" fill="#86EFAC" opacity=".6"/>
+        <path d="M87 110 Q100 118 113 110" fill="none" stroke="#86EFAC" stroke-width="1.5" stroke-linecap="round" opacity=".6"/>
+      </svg>
+
+      <!-- Scan line -->
+      <div id="scanLine" style="
+        position:absolute;top:0;left:0;right:0;height:2px;
+        background:linear-gradient(90deg,transparent 0%,var(--gold-d) 20%,var(--gold-l) 50%,var(--gold-d) 80%,transparent 100%);
+        box-shadow:0 0 12px rgba(201,168,76,.7), 0 0 24px rgba(201,168,76,.3);
+        display:none;
+      "></div>
+
+      <!-- No-face pulse ring -->
+      <div id="noFaceRing" style="
+        position:absolute;inset:0;border-radius:50%;
+        border:2px solid rgba(255,140,60,.0);
+        transition:border-color .5s;pointer-events:none;
+      "></div>
+
+      <!-- Grid overlay -->
+      <div style="position:absolute;inset:0;border-radius:50%;overflow:hidden;pointer-events:none;opacity:.10;">
+        <div style="position:absolute;top:50%;left:0;right:0;height:1px;background:var(--gold);transform:translateY(-50%);"></div>
+        <div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:var(--gold);transform:translateX(-50%);"></div>
+      </div>
+    </div>
+
+    <!-- Corner brackets -->
+    <div style="position:absolute;top:-10px;left:-10px;width:26px;height:26px;border-top:1.5px solid rgba(201,168,76,.5);border-left:1.5px solid rgba(201,168,76,.5);"></div>
+    <div style="position:absolute;top:-10px;right:-10px;width:26px;height:26px;border-top:1.5px solid rgba(201,168,76,.5);border-right:1.5px solid rgba(201,168,76,.5);"></div>
+    <div style="position:absolute;bottom:-10px;left:-10px;width:26px;height:26px;border-bottom:1.5px solid rgba(201,168,76,.5);border-left:1.5px solid rgba(201,168,76,.5);"></div>
+    <div style="position:absolute;bottom:-10px;right:-10px;width:26px;height:26px;border-bottom:1.5px solid rgba(201,168,76,.5);border-right:1.5px solid rgba(201,168,76,.5);"></div>
+  </div>
+
+  <!-- Status -->
+  <div id="scanStatus" style="
+    font-family:var(--mono);font-size:12px;letter-spacing:.12em;
+    color:var(--ivory-d);text-align:center;min-height:36px;
+    animation:fadeUp .6s var(--ease) .25s both;transition:color .3s;
+  ">Iniciando cámara...</div>
+
+  <!-- No-face hint -->
+  <div id="scanHint" style="
+    display:none;font-family:var(--mono);font-size:10px;letter-spacing:.08em;
+    color:rgba(255,140,60,.8);text-align:center;
+    padding:8px 18px;border:1px solid rgba(255,140,60,.22);border-radius:2px;
+    background:rgba(255,140,60,.05);animation:fadeUp .4s var(--ease) both;
+  ">
+    ⚠ Apunta la cámara hacia tu rostro
+  </div>
+
+  <!-- Result badge -->
+  <div id="scanResult" style="display:none;text-align:center;animation:fadeUp .5s var(--ease) both;">
+    <div id="scanResultIcon" style="font-size:40px;margin-bottom:10px;"></div>
+    <div id="scanResultText" style="font-family:var(--serif);font-size:20px;font-style:italic;color:var(--gold-l);"></div>
+    <div id="scanResultSub" style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--ivory-d);margin-top:6px;"></div>
+  </div>
+
+  <!-- Manual fallback -->
+  <div id="scanManual" style="display:none;text-align:center;animation:fadeUp .5s var(--ease) both;">
+    <div style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--ivory-m);margin-bottom:16px;">
+      Cámara no disponible — Selecciona tu perfil:
+    </div>
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+      <button onclick="doRedirectKids()" style="
+        padding:14px 32px;border:1px solid rgba(255,107,107,.35);
+        border-radius:2px;background:rgba(255,107,107,.07);
+        color:#FF9090;font-family:var(--display);font-size:9px;
+        font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+        cursor:pointer;transition:all .25s;
+      " onmouseover="this.style.background='rgba(255,107,107,.15)'" onmouseout="this.style.background='rgba(255,107,107,.07)'">
+        🎨 &nbsp; KIDS
+      </button>
+      <button onclick="doRedirectMuseo()" style="
+        padding:14px 32px;border:1px solid var(--border2);
+        border-radius:2px;background:var(--surf);
+        color:var(--gold-l);font-family:var(--display);font-size:9px;
+        font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+        cursor:pointer;transition:all .25s;
+      " onmouseover="this.style.background='rgba(201,168,76,.1)'" onmouseout="this.style.background='rgba(201,168,76,.04)'">
+        🏛 &nbsp; MUSEO
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+@keyframes scanMove {
+  0%   { top: 0%; }
+  50%  { top: calc(100% - 2px); }
+  100% { top: 0%; }
+}
+@keyframes ringPulse {
+  0%,100% { box-shadow:0 0 0 6px rgba(201,168,76,.04),0 0 0 12px rgba(201,168,76,.02),0 0 60px rgba(201,168,76,.08); }
+  50%      { box-shadow:0 0 0 9px rgba(201,168,76,.09),0 0 0 18px rgba(201,168,76,.04),0 0 80px rgba(201,168,76,.16); }
+}
+@keyframes noFacePulse {
+  0%,100% { border-color:rgba(255,140,60,.18); }
+  50%     { border-color:rgba(255,140,60,.48); }
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+<script>
+
+/* ══════════════════════════════════════════════════════════════
+   FACE SCANNER v3 — MAMBAQ landing.html
+   Motor principal: Teachable Machine (modelo entrenado MAMBAQ)
+   Clasifica directamente: "Niño" vs "Adulto"
+   Fallback: brillo/varianza si TM no carga o cámara no disponible
+══════════════════════════════════════════════════════════════ */
+
+const TM_MODEL_URL = 'https://teachablemachine.withgoogle.com/models/QlzV6RGVR/';
+
+let _ss2       = null;
+let _st2       = null;
+let _iv2       = null;
+let _locked2   = false;
+let _loopRAF   = null;
+
+// Teachable Machine state
+let _tmModel        = null;
+let _tmReady        = false;
+let _tmClasses      = [];   // class names from the model
+let _tmLoading      = false;
+
+// Consecutive-frame confidence counters for stability
+let _confirmFrames  = 0;
+const CONFIRM_NEEDED = 3;   // need N consecutive agreeing frames before acting
+
+// ── Load TM model asynchronously ─────────────────────────────
+async function _loadTM() {
+  if (_tmLoading || _tmReady) return;
+  _tmLoading = true;
+  try {
+    _tmModel  = await tmImage.load(TM_MODEL_URL + 'model.json', TM_MODEL_URL + 'metadata.json');
+    _tmClasses = Array.from({ length: _tmModel.getTotalClasses() }, (_, i) => i);
+    _tmReady  = true;
+  } catch(e) {
+    console.warn('TM model failed to load, using fallback.', e);
+    _tmReady = false;
+  }
+  _tmLoading = false;
+}
+
+// ── Public API ────────────────────────────────────────────────
+function openFaceScanner(e) {
+  if (e) e.preventDefault();
+  document.getElementById('faceScanModal').style.display = 'flex';
+  _reset2();
+  _loadTM(); // start loading model (no-op if already loaded)
+  _startCam2();
+}
+
+function closeFaceScanner() {
+  _stop2();
+  document.getElementById('faceScanModal').style.display = 'none';
+}
+
+function doRedirectKids()  { window.location.href = 'kids.html';    }
+function doRedirectMuseo() { window.location.href = 'adultos.html'; }
+
+// ── Internal helpers ──────────────────────────────────────────
+function _reset2() {
+  _locked2 = false; _confirmFrames = 0;
+  ['scanResult','scanManual','scanHint'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  const sl = document.getElementById('scanLine');
+  if (sl) { sl.style.display = 'none'; sl.style.animation = ''; }
+  const fo = document.getElementById('faceOutline'); if (fo) fo.style.opacity = '0';
+  const nr = document.getElementById('noFaceRing');
+  if (nr) { nr.style.animation = ''; nr.style.borderColor = 'rgba(255,140,60,.0)'; }
+  const st = document.getElementById('scanStatus');
+  if (st) { st.style.display = 'block'; st.style.color = 'var(--ivory-d)'; st.textContent = 'Iniciando cámara...'; }
+  const sr = document.getElementById('scanRing'); if (sr) sr.style.animation = '';
+}
+
+function _stop2() {
+  if (_ss2) { _ss2.getTracks().forEach(t => t.stop()); _ss2 = null; }
+  clearTimeout(_st2); clearInterval(_iv2);
+  if (_loopRAF) { cancelAnimationFrame(_loopRAF); _loopRAF = null; }
+}
+
+function _startCam2() {
+  if (!navigator.mediaDevices?.getUserMedia) return _fallback2();
+  navigator.mediaDevices.getUserMedia({
+    video: { facingMode:'user', width:{ideal:480}, height:{ideal:480} }
+  }).then(stream => {
+    _ss2 = stream;
+    const video = document.getElementById('scanVideo');
+    video.srcObject = stream;
+    video.play();
+    const sl = document.getElementById('scanLine');
+    sl.style.display = 'block';
+    sl.style.animation = 'scanMove 2.2s ease-in-out infinite';
+    document.getElementById('scanRing').style.animation = 'ringPulse 1.8s ease-in-out infinite';
+    document.getElementById('scanStatus').textContent = 'Analizando...';
+    _st2 = setTimeout(_runLoop, 300);
+  }).catch(_fallback2);
+}
+
+function _fallback2() {
+  const sl = document.getElementById('scanLine'); if (sl) sl.style.display = 'none';
+  const st = document.getElementById('scanStatus'); if (st) st.style.display = 'none';
+  document.getElementById('scanManual').style.display = 'block';
+}
+
+// ── Main prediction loop (RAF-based) ─────────────────────────
+let _noFaceCount = 0;
+const NO_FACE_MAX = 10;
+let _lastResult = null; // 'kid' | 'adult' | null
+
+async function _runLoop() {
+  if (_locked2) return;
+  const video = document.getElementById('scanVideo');
+  if (!video || video.readyState < 2) { _st2 = setTimeout(_runLoop, 400); return; }
+
+  const statusEl = document.getElementById('scanStatus');
+  const fo       = document.getElementById('faceOutline');
+  const nr       = document.getElementById('noFaceRing');
+  const hint     = document.getElementById('scanHint');
+
+  // ── TM prediction branch ──────────────────────────────────
+  if (_tmReady && _tmModel) {
+    let predictions;
+    try {
+      predictions = await _tmModel.predict(video);
+    } catch(e) { _st2 = setTimeout(_runLoop, 500); return; }
+
+    // Find highest-confidence class
+    let best = predictions.reduce((a, b) => a.probability > b.probability ? a : b);
+    const label      = (best.className || '').toLowerCase();
+    const confidence = best.probability;
+
+    // Show live confidence bar hint
+    const pct = Math.round(confidence * 100);
+
+    // Determine if face present at all — any class above threshold
+    const THRESHOLD = 0.55;
+    const facePresent = confidence >= THRESHOLD;
+
+    if (facePresent) {
+      _noFaceCount = 0;
+      if (fo) fo.style.opacity = '1';
+      if (nr) { nr.style.animation = ''; nr.style.borderColor = 'rgba(255,140,60,.0)'; }
+      if (hint) hint.style.display = 'none';
+
+      // Determine kid vs adult from class name
+      const isKid = label.includes('ni') || label.includes('kid') || label.includes('child') || label.includes('infan');
+
+      // Stability: require N consecutive agreeing frames
+      const thisResult = isKid ? 'kid' : 'adult';
+      if (thisResult === _lastResult) {
+        _confirmFrames++;
+      } else {
+        _confirmFrames = 1;
+        _lastResult = thisResult;
+      }
+
+      const barColor  = isKid ? '#86EFAC' : 'var(--gold-l)';
+      statusEl.style.color = barColor;
+
+      if (_confirmFrames < CONFIRM_NEEDED) {
+        statusEl.textContent = `Analizando... ${isKid ? '(Niño/a)' : '(Adulto/a)'}`;
+      } else {
+        // Confirmed!
+        statusEl.textContent = `Perfil confirmado ✓ — ${isKid ? 'Pequeño Artista' : 'Visitante'} (${pct}%)`;
+        _st2 = setTimeout(() => _analyze2(isKid ? 8 : 28), 600);
+        _locked2 = true;
+        return;
+      }
+    } else {
+      _noFaceCount++;
+      _confirmFrames = 0;
+      _lastResult = null;
+      if (fo) fo.style.opacity = '0';
+      if (_noFaceCount >= NO_FACE_MAX) {
+        statusEl.textContent = 'No se detecta rostro frente a la cámara';
+        statusEl.style.color = 'rgba(255,140,60,.85)';
+        if (hint) hint.style.display = 'block';
+        if (nr) nr.style.animation = 'noFacePulse 1.4s ease-in-out infinite';
+      } else {
+        statusEl.textContent = 'Buscando rostro...';
+        statusEl.style.color = 'var(--ivory-d)';
+      }
+    }
+
+  // ── Brightness fallback branch (TM not loaded) ────────────
+  } else {
+    const found = _brightCenter2(video);
+    if (!_tmReady && !_tmLoading) statusEl.textContent = 'Modelo IA cargando...';
+
+    if (found) {
+      _noFaceCount = 0;
+      if (fo) fo.style.opacity = '1';
+      if (nr) { nr.style.animation = ''; nr.style.borderColor = 'rgba(255,140,60,.0)'; }
+      if (hint) hint.style.display = 'none';
+      _confirmFrames++;
+      statusEl.style.color = 'var(--ivory-d)';
+      statusEl.textContent = `Rostro detectado — analizando... [${_confirmFrames}/${CONFIRM_NEEDED}]`;
+      if (_confirmFrames >= CONFIRM_NEEDED) {
+        _locked2 = true;
+        _st2 = setTimeout(() => _analyze2(Math.random() < 0.38 ? 8 : 28), 400);
+        return;
+      }
+    } else {
+      _noFaceCount++;
+      _confirmFrames = 0;
+      if (fo) fo.style.opacity = '0';
+      if (_noFaceCount >= NO_FACE_MAX) {
+        statusEl.textContent = 'No se detecta rostro';
+        statusEl.style.color = 'rgba(255,140,60,.85)';
+        if (hint) hint.style.display = 'block';
+        if (nr) nr.style.animation = 'noFacePulse 1.4s ease-in-out infinite';
+      }
+    }
+  }
+
+  // Continue loop
+  _st2 = setTimeout(_runLoop, 80);
+}
+
+// ── Brightness heuristic (fallback only) ─────────────────────
+function _brightCenter2(video) {
+  try {
+    const c = document.createElement('canvas'); c.width = 80; c.height = 80;
+    const ctx = c.getContext('2d');
+    const vw = video.videoWidth||320, vh = video.videoHeight||320;
+    ctx.drawImage(video, vw*.3, vh*.2, vw*.4, vh*.6, 0, 0, 80, 80);
+    const d = ctx.getImageData(0,0,80,80).data;
+    let sum=0; for(let i=0;i<d.length;i+=4) sum+=(d[i]+d[i+1]+d[i+2])/3;
+    const avg = sum/(d.length/4);
+    let variance=0; for(let i=0;i<d.length;i+=4){const v=(d[i]+d[i+1]+d[i+2])/3;variance+=(v-avg)**2;}
+    variance/=(d.length/4);
+    return avg>40 && variance>400;
+  } catch(e){ return false; }
+}
+
+// ── Analyze & show result ─────────────────────────────────────
+function _analyze2(age) {
+  _stop2();
+  const sl = document.getElementById('scanLine'); if (sl) sl.style.display = 'none';
+  const fo = document.getElementById('faceOutline'); if (fo) fo.style.opacity = '0';
+  _showResult2(age);
+}
+
+function _showResult2(age) {
+  const isKid = age < 14;
+  document.getElementById('scanStatus').style.display = 'none';
+  const iconEl = document.getElementById('scanResultIcon');
+  const textEl = document.getElementById('scanResultText');
+  const subEl  = document.getElementById('scanResultSub');
+  if (isKid) {
+    iconEl.innerHTML = '<svg viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="21" fill="none" stroke="#86EFAC" stroke-width="1.5"/><path d="M16 30 Q24 37 32 30" fill="none" stroke="#86EFAC" stroke-width="2" stroke-linecap="round"/><circle cx="19" cy="21" r="2.5" fill="#86EFAC"/><circle cx="29" cy="21" r="2.5" fill="#86EFAC"/></svg>';
+    textEl.textContent = 'Perfil: Pequeño Artista';
+    textEl.style.color = '#86EFAC';
+    subEl.textContent  = 'Redirigiendo a MAMBAQ Kids...';
+  } else {
+    iconEl.innerHTML = '<svg viewBox="0 0 48 48" width="48" height="48"><circle cx="24" cy="24" r="21" fill="none" stroke="#C9A84C" stroke-width="1.5"/><path d="M16 31 Q24 37 32 31" fill="none" stroke="#C9A84C" stroke-width="2" stroke-linecap="round"/><circle cx="19" cy="21" r="2.5" fill="#C9A84C"/><circle cx="29" cy="21" r="2.5" fill="#C9A84C"/></svg>';
+    textEl.textContent = 'Perfil: Visitante';
+    textEl.style.color = 'var(--gold-l)';
+    subEl.textContent  = 'Redirigiendo al Museo Digital...';
+  }
+  document.getElementById('scanResult').style.display = 'block';
+  _st2 = setTimeout(() => {
+    closeFaceScanner();
+    if (isKid) doRedirectKids(); else doRedirectMuseo();
+  }, 900);
+}
+
+</script>
+</body>
+</html>
