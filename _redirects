@@ -1,0 +1,8 @@
+/kids/*            /kids.html    200
+/kids              /kids.html    200
+/museo/*           /museo.html   200
+/museo             /museo.html   200
+/kids.html         /kids         301
+/adultos.html      /museo        301
+/museo.html        /museo        301
+/*                 /index.html   200
